@@ -6,18 +6,20 @@ let BaseURL = "http://localhost:4000";
 
 
 
-function getMessage() {
-  let data = axios.get(`${BaseURL}/chat/messages`, {
+async function getMessage() {
+  let data = await axios.get(`${BaseURL}/chat/messages`, {
     headers: { 'Authorization': token }
   })
+  console.log(data.data);
+  chatMessages.innerHTML = '';
   data.data.forEach(msg => {
     const msgElem = document.createElement('div');
-    msgElem.textContent = msg.message;
+    msgElem.textContent = `sent by:${msg.UserId} ${msg.message}`;
     chatMessages.appendChild(msgElem);
   });
 
 }
-
+getMessage();
 async function sendMessage() {
   const text = messageInput.value.trim();
   if (!text) return;
