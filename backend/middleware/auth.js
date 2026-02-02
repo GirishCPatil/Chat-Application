@@ -3,19 +3,19 @@ const User = require('../models/User');
 
 const authenticate = (req, res, next) => {
     try {
-        const token = req.header('token');
-        const user = jwt.verify(token, 'secretkey');
+        const token = req.header('Authorization');
+        const user = jwt.verify(token, 'secretKey');
 
         User.findByPk(user.userId).then(user => {
-            // --- ADD THIS CHECK ---
+          
             if (!user) {
-                // If user doesn't exist in DB anymore, throw error
+               
                 throw new Error('User not found'); 
             }
             req.user = user;
             next();
         }).catch(err => {
-             // This catches the 'User not found' error
+            
             return res.status(401).json({success: false, message: "User not found"});
         });
 

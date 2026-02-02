@@ -12,6 +12,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
         const token = response.data.token;
         localStorage.setItem("token", token);
         alert("Login successful!");
+        window.location.href = "chatui.html";
     } catch (error) {
         console.error("Error during login:", error);
         alert("Login failed. Please check your credentials and try again.");

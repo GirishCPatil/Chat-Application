@@ -25,7 +25,7 @@ const sendMessage = async (req, res) => {
 const getMessages = async (req, res) => {
   try {
     const messages = await Message.findAll({
-      order: [['createdAt', 'ASC']]
+       order: [['createdAt', 'ASC']]
     });
 
     res.json(messages);

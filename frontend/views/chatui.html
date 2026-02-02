@@ -110,43 +110,12 @@ body {
 
   <div class="chat-input">
     <input type="text" id="messageInput" placeholder="Type a message...">
-    <button onclick="sendMessage()">➤</button>
+    <button id="sendBtn">➤</button>
   </div>
 </div>
 
-<script>
-const chatMessages = document.getElementById('chatMessages');
-const messageInput = document.getElementById('messageInput');
-
-function getTime() {
-  const now = new Date();
-  return now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
-}
-
-function addMessage(text, type) {
-  const msg = document.createElement('div');
-  msg.className = `message ${type}`;
-  msg.innerHTML = `${text}<div class="timestamp">${getTime()}</div>`;
-  chatMessages.appendChild(msg);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function sendMessage() {
-  const text = messageInput.value.trim();
-  if (!text) return;
-
-  addMessage(text, 'sent');
-  messageInput.value = '';
-
-  setTimeout(() => {
-    addMessage('Auto reply 🙂', 'received');
-  }, 600);
-}
-
-messageInput.addEventListener('keypress', e => {
-  if (e.key === 'Enter') sendMessage();
-});
-</script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="../scripts/chatui.js"></script>
 
 </body>
 </html>
