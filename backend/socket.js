@@ -12,7 +12,8 @@ const initSocket = (server) => {
 
     socket.on("sendMessage", (message) => {
       // broadcast to all connected clients
-      io.emit("receiveMessage", message);
+     socket.broadcast.emit("receiveMessage", message);
+
     });
 
     socket.on("disconnect", () => {

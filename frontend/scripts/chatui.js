@@ -32,6 +32,7 @@ async function sendMessage() {
   messageInput.value = '';
   try{
     socket.emit("sendMessage", {message: text});
+    appendMessage(text, "sent");
   } catch (error) {
     console.error('Error sending message:', error);
   }
@@ -46,12 +47,13 @@ socket.on("receiveMessage", (msg) => {
   appendMessage(msg.message, "received");
 });
 
+
 function appendMessage(text, type) {
   const msgElem = document.createElement('div');
   msgElem.classList.add('message', type);
   msgElem.innerHTML = `
-    ${text}
-    <div class="timestamp">${new Date().toLocaleTimeString()}</div>
+    ${text} 
+    <div class="timestamp">${type} ${new Date().toLocaleTimeString()}</div>
   `;
   chatMessages.appendChild(msgElem);
   chatMessages.scrollTop = chatMessages.scrollHeight;
