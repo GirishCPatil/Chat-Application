@@ -1,6 +1,8 @@
 const chatMessages = document.getElementById('chatMessages');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
+const socket = io("http://localhost:3000");
+
 let token = localStorage.getItem('token')
 let BaseURL = "http://localhost:4000";
 
@@ -14,23 +16,35 @@ async function getMessage() {
   chatMessages.innerHTML = '';
   data.data.forEach(msg => {
     const msgElem = document.createElement('div');
+    msgElem.id = 'sent';
     msgElem.textContent = `sent by:${msg.UserId} ${msg.message}`;
     chatMessages.appendChild(msgElem);
   });
 
 }
 getMessage();
+
+
 async function sendMessage() {
   const text = messageInput.value.trim();
   if (!text) return;
-  getMessage();
+ 
   messageInput.value = '';
+  
+ socket.emit("sendMessage", {
+    message: text,
+    token: token
+  });
+
+  appendMessage(text, "sent");
+  
     try {
     const response = await axios.post(`${BaseURL}/chat/send`, { message: text }, {
       headers: { 'Authorization': token }
     });
 
     console.log('Message sent:', response.data);
+     getMessage();
   } catch (error) {
     console.error('Error sending message:', error);
   }
@@ -40,3 +54,18 @@ sendBtn.addEventListener('click', sendMessage);
 messageInput.addEventListener('keypress', e => {
   if (e.key === 'Enter') sendMessage();
 });
+
+socket.on("receiveMessage", (msg) => {
+  appendMessage(msg.message, "received");
+});
+
+function appendMessage(text, type) {
+  const msgElem = document.createElement('div');
+  msgElem.classList.add('message', type);
+  msgElem.innerHTML = `
+    ${text}
+    <div class="timestamp">${new Date().toLocaleTimeString()}</div>
+  `;
+  chatMessages.appendChild(msgElem);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
