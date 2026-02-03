@@ -1,28 +1,28 @@
 const chatMessages = document.getElementById('chatMessages');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
-const socket = io("http://localhost:3000");
+const socket = io("http://localhost:4000");
 
 let token = localStorage.getItem('token')
 let BaseURL = "http://localhost:4000";
 
 
 
-async function getMessage() {
-  let data = await axios.get(`${BaseURL}/chat/messages`, {
-    headers: { 'Authorization': token }
-  })
-  console.log(data.data);
-  chatMessages.innerHTML = '';
-  data.data.forEach(msg => {
-    const msgElem = document.createElement('div');
-    msgElem.id = 'sent';
-    msgElem.textContent = `sent by:${msg.UserId} ${msg.message}`;
-    chatMessages.appendChild(msgElem);
-  });
+// async function getMessage() {
+//   let data = await axios.get(`${BaseURL}/chat/messages`, {
+//     headers: { 'Authorization': token }
+//   })
+//   console.log(data.data);
+//   chatMessages.innerHTML = '';
+//   data.data.forEach(msg => {
+//     const msgElem = document.createElement('div');
+//     msgElem.id = 'sent';
+//     msgElem.textContent = `sent by:${msg.UserId} ${msg.message}`;
+//     chatMessages.appendChild(msgElem);
+//   });
 
-}
-getMessage();
+// }
+// getMessage();
 
 
 async function sendMessage() {
@@ -30,21 +30,8 @@ async function sendMessage() {
   if (!text) return;
  
   messageInput.value = '';
-  
- socket.emit("sendMessage", {
-    message: text,
-    token: token
-  });
-
-  appendMessage(text, "sent");
-  
-    try {
-    const response = await axios.post(`${BaseURL}/chat/send`, { message: text }, {
-      headers: { 'Authorization': token }
-    });
-
-    console.log('Message sent:', response.data);
-     getMessage();
+  try{
+    socket.emit("sendMessage", {message: text});
   } catch (error) {
     console.error('Error sending message:', error);
   }
