@@ -1,7 +1,7 @@
 const express = require('express');
 const sequelize = require('./utils/db');
 const http = require('http');
-const initSocket = require("./socket");
+const initSocket = require("./socket-io/socket");
 const PORT = process.env.PORT || 4000;
 const app = express();  
 
