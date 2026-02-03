@@ -1,7 +1,7 @@
 const chatMessages = document.getElementById('chatMessages');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
-const socket = io("http://localhost:4000");
+const socket = io("http://localhost:4000",{auth:{token:localStorage.getItem('token')}});
 
 let token = localStorage.getItem('token')
 let BaseURL = "http://localhost:4000";
@@ -39,12 +39,16 @@ async function sendMessage() {
 }
 sendBtn.addEventListener('click', sendMessage);
 
+
+
 messageInput.addEventListener('keypress', e => {
   if (e.key === 'Enter') sendMessage();
 });
 
+
 socket.on("receiveMessage", (msg) => {
-  appendMessage(msg.message, "received");
+  console.log(msg.message.message);
+  appendMessage(`${msg.user} : ${msg.message.message}`, "received");
 });
 
 
