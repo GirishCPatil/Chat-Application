@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Chat UI</title>
 
 <style>
@@ -35,9 +35,27 @@ body {
 .chat-header {
   background: #075e54;
   color: white;
-  padding: 12px;
-  text-align: center;
-  font-weight: bold;
+  padding: 8px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.chat-header input {
+  flex: 1;
+  padding: 6px;
+  border-radius: 4px;
+  border: none;
+  outline: none;
+}
+
+.chat-header button {
+  padding: 6px 10px;
+  border: none;
+  background: #128c7e;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .chat-messages {
@@ -60,12 +78,12 @@ body {
 
 .sent {
   background: #ffffff;
-  margin-left: auto;   /* LEFT side */
+  margin-left: auto;
 }
 
 .received {
   background: #dcf8c6;
-  margin-right: auto;    /* RIGHT side */
+  margin-right: auto;
 }
 
 .timestamp {
@@ -77,11 +95,13 @@ body {
 
 .chat-input {
   display: flex;
+  align-items: center;
   padding: 8px;
   background: #f0f0f0;
+  gap: 6px;
 }
 
-.chat-input input {
+.chat-input input[type="text"] {
   flex: 1;
   padding: 8px 12px;
   border-radius: 20px;
@@ -90,13 +110,22 @@ body {
 }
 
 .chat-input button {
-  margin-left: 8px;
-  padding: 8px 14px;
+  padding: 8px 12px;
   border-radius: 50%;
   border: none;
   background: #075e54;
   color: white;
   cursor: pointer;
+}
+
+#sendFileBtn {
+  background: transparent;
+  color: #075e54;
+  font-size: 20px;
+}
+
+#sendFileBtn:hover {
+  background: rgba(0,0,0,0.1);
 }
 </style>
 </head>
@@ -104,23 +133,31 @@ body {
 <body>
 
 <div class="chat-container">
-  <div class="chat-header">Chat Window</div>
-  <div class="chat-header">
-  <input
-    type="text"
-    id="emailInput"
-    placeholder="Enter user email"
-    style="width:70%; padding:6px;"
-  />
-  <button id="joinBtn">Join</button>
-</div>
 
+  <!-- Personal Chat -->
+  <div class="chat-header">
+    <input type="text" id="emailInput" placeholder="Enter user email" />
+    <button id="joinBtn">Join</button>
+  </div>
+
+  <!-- Group Chat -->
+  <div class="chat-header">
+    <input type="text" id="groupchatInput" placeholder="Enter group name" />
+    <button id="joinGroupBtn">Join Group</button>
+  </div>
+
+  <!-- Messages -->
   <div class="chat-messages" id="chatMessages"></div>
 
+  <!-- Chat Input -->
   <div class="chat-input">
-    <input type="text" id="messageInput" placeholder="Type a message...">
+    <input type="file" id="fileInput" hidden />
+    <button id="sendFileBtn" title="Attach file">📎</button>
+
+    <input type="text" id="messageInput" placeholder="Type a message..." />
     <button id="sendBtn">➤</button>
   </div>
+
 </div>
 
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>

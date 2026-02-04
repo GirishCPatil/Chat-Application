@@ -16,4 +16,14 @@ module.exports = (io, socket) => {
     });
   });
 
+  socket.on("media_message", ({ roomId, fileUrl, fileType }) => {
+  io.to(roomId).emit("receive_media_message", {
+    user: socket.user.email,
+    fileUrl,
+    fileType,
+    time: new Date().toLocaleTimeString()
+  });
+});
+
+
 };
