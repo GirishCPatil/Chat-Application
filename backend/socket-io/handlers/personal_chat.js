@@ -11,6 +11,7 @@ module.exports = (io, socket) => {
     io.to(roomId).emit("receive_message", {
       text,
       user: socket.user.name,
+      email: socket.user.email,
       time: new Date().toLocaleTimeString()
     });
   });

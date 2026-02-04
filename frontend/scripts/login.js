@@ -1,5 +1,6 @@
 const BaseURL = "http://localhost:4000";
 
+
 document.getElementById("loginForm").addEventListener("submit", async function(event) {
     event.preventDefault();
     const email = document.getElementById("email").value;
@@ -11,6 +12,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
         });
         const token = response.data.token;
         localStorage.setItem("token", token);
+        localStorage.setItem("email", email);
         alert("Login successful!");
         window.location.href = "chatui.html";
     } catch (error) {
