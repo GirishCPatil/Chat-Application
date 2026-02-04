@@ -1,57 +1,45 @@
 const chatMessages = document.getElementById('chatMessages');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
-const socket = io("http://localhost:4000",{auth:{token:localStorage.getItem('token')}});
+let token= localStorage.getItem('token');
 
-let token = localStorage.getItem('token')
+const socket = io("http://localhost:4000", {
+  auth: { token: token }
+});
+
 let BaseURL = "http://localhost:4000";
 
-
-
-// async function getMessage() {
-//   let data = await axios.get(`${BaseURL}/chat/messages`, {
-//     headers: { 'Authorization': token }
-//   })
-//   console.log(data.data);
-//   chatMessages.innerHTML = '';
-//   data.data.forEach(msg => {
-//     const msgElem = document.createElement('div');
-//     msgElem.id = 'sent';
-//     msgElem.textContent = `sent by:${msg.UserId} ${msg.message}`;
-//     chatMessages.appendChild(msgElem);
-//   });
-
-// }
-// getMessage();
-
-
+/* ===============================
+   SEND MESSAGE (NO CHANGE)
+================================ */
 async function sendMessage() {
   const text = messageInput.value.trim();
   if (!text) return;
- 
+
   messageInput.value = '';
-  try{
-    socket.emit("sendMessage", {message: text});
-  
+  try {
+    socket.emit("sendMessage", text);
   } catch (error) {
     console.error('Error sending message:', error);
   }
 }
+
 sendBtn.addEventListener('click', sendMessage);
-
-
 
 messageInput.addEventListener('keypress', e => {
   if (e.key === 'Enter') sendMessage();
 });
 
-
+/* ===============================
+   RECEIVE MESSAGE (FIXED)
+================================ */
 socket.on("receiveMessage", (msg) => {
-  console.log(msg.message.message);
-  appendMessage(`${msg.user} : ${msg.message.message}`, "received");
+  appendMessage(`${msg.user} : ${msg.text}`, "received");
 });
 
-
+/* ===============================
+   APPEND MESSAGE (NO CHANGE)
+================================ */
 function appendMessage(text, type) {
   const msgElem = document.createElement('div');
   msgElem.classList.add('message', type);

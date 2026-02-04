@@ -1,6 +1,7 @@
 const { Server } = require("socket.io");
 const socketMiddleware = require("./middleware");
 const chatHandler = require("./handlers/chat");
+const personalChatHandler = require("./handlers/personal_chat");
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -10,7 +11,7 @@ module.exports = (server) => {
     }
   });
 
-  // 🌐 Socket middleware (auth)
+  //  Socket middleware (auth)
   io.use(socketMiddleware);
 
   io.on("connection", (socket) => {
@@ -18,6 +19,7 @@ module.exports = (server) => {
 
     // Register event handlers
     chatHandler(io, socket);
+     personalChatHandler(io, socket);
 
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.user.name);

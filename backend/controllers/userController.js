@@ -42,10 +42,10 @@ const login = async (req, res) => {
          return res.status(401).send('Invalid credentials');
       }
 
-      const token = jwt.sign({ userId: user.id },
+      const token = jwt.sign({ userId: user.id ,name: user.name},
          'secretKey', 
          { expiresIn: '1h' });
-
+console.log("Generated Token:", token);
       res.status(200).json({ token });
 
    } catch (error) {
