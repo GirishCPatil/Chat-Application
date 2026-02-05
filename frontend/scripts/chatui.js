@@ -84,33 +84,38 @@ socket.on("receive_message", (msg) => {
   appendMessage(`${msg.user} : ${msg.text}`, type);
 });
 
-sendFileBtn.addEventListener("click", async () => {
+fileInput.addEventListener("change", async () => {
   if (!roomId) {
     alert("Join chat first");
+    fileInput.value = "";
     return;
   }
 
   const file = fileInput.files[0];
   if (!file) return;
 
-  const formData = new FormData();
-  formData.append("file", file);
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
 
-  const res = await axios.post(
-    "http://localhost:4000/media/upload",
-    formData
-  );
+    const res = await axios.post(
+      "http://localhost:4000/media/upload",
+      formData
+    );
 
-  socket.emit("media_message", {
-    roomId,
-    fileUrl: res.data.fileUrl,
-    fileType: file.type
-  });
+    socket.emit("media_message", {
+      roomId,
+      fileUrl: res.data.fileUrl,
+      fileType: file.type
+    });
+  } catch (err) {
+    console.error("File upload failed", err);
+    alert("File upload failed");
+  }
 
+  // ✅ Reset input so same file can be reselected later
   fileInput.value = "";
 });
-
-
 
 function appendMessage(text, type) {
   const msgElem = document.createElement('div');
@@ -125,16 +130,34 @@ function appendMessage(text, type) {
 socket.on("receive_media_message", (msg) => {
   const type = msg.user === myEmail ? "sent" : "received";
 
+  // Media message
   if (msg.fileUrl) {
     if (msg.fileType.startsWith("image")) {
-      appendMessage(`<img src="${msg.fileUrl}" width="200">`, type);
-    } else {
       appendMessage(
-        `<a href="${msg.fileUrl}" target="_blank">Download file</a>`,
+        `<img src="${msg.fileUrl}" width="200" />`,
+        type
+      );
+    } 
+    else if (msg.fileType.startsWith("video")) {
+      appendMessage(
+        `<video controls width="220">
+           <source src="${msg.fileUrl}" type="${msg.fileType}">
+         </video>`,
+        type
+      );
+    } 
+    else {
+      appendMessage(
+        `<a href="${msg.fileUrl}" target="_blank" download>
+           📄 Download file
+         </a>`,
         type
       );
     }
-  } else {
+  }
+  // Text message
+  else {
     appendMessage(`${msg.user}: ${msg.text}`, type);
   }
 });
+

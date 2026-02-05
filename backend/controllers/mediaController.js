@@ -14,7 +14,7 @@ exports.uploadToS3 = async (file) => {
     Key: `chat/${uuidv4()}-${file.originalname}`,
     Body: file.buffer,
     ContentType: file.mimetype,
-    ACL: "public-read"
+
   };
 
   const result = await s3.upload(params).promise();
